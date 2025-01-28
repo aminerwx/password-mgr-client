@@ -1,12 +1,23 @@
 import { FC } from "react";
-import { Copy, EllipsisVertical } from "lucide-react";
+import { Copy, EllipsisVertical, Layers2, Trash } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover.tsx";
 import Button from "./ui/Button";
 import Input from "./ui/Input";
 import { useCredentialContext } from "../context/credential";
 
 const DataTable: FC = () => {
-  const { users } = useCredentialContext();
+  const { users, setUsers } = useCredentialContext();
+
+  function deleteHandler(id: number) {
+    setUsers(users.filter((user) => user.id !== id));
+  }
+
+  //TODO: fix
+  function duplicateHandler(id: number) {
+    const curr = { ...users[id] };
+    curr.id++;
+    setUsers([...users, curr]);
+  }
 
   return (
     <div className="p-6">
@@ -41,25 +52,51 @@ const DataTable: FC = () => {
                       <EllipsisVertical />
                     </PopoverTrigger>
                     <PopoverContent>
-                      <div>
+                      <div className="mb-2">
                         <Button
                           onClick={() =>
                             navigator.clipboard.writeText(user.username)
                           }
                         >
-                          <Copy size={24} />
+                          <Copy
+                            size={24}
+                            className="inline align-middle mr-3"
+                          />
+                          <p className="inline align-middle">Copy username</p>
                         </Button>
-                        Copy username
                       </div>
-                      <div>
+                      <div className="mb-2">
                         <Button
                           onClick={() =>
                             navigator.clipboard.writeText(user.password)
                           }
                         >
-                          <Copy size={24} />
+                          <Copy
+                            size={24}
+                            className="inline align-middle mr-3"
+                          />
+                          <p className="inline align-middle">Copy password</p>
                         </Button>
-                        Copy Password
+                      </div>
+                      <div className="mb-2">
+                        <Button onClick={() => duplicateHandler(user.id)}>
+                          <Layers2
+                            size={24}
+                            className="inline align-middle mr-3"
+                          />
+                          <p className="inline align-middle">Duplicate</p>
+                        </Button>
+                      </div>
+                      <div>
+                        <Button onClick={() => deleteHandler(user.id)}>
+                          <Trash
+                            size={24}
+                            className="inline align-middle mr-3 text-red-500"
+                          />
+                          <p className="inline align-middle text-red-500">
+                            Delete
+                          </p>
+                        </Button>
                       </div>
                     </PopoverContent>
                   </Popover>

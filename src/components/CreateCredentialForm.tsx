@@ -34,7 +34,7 @@ const CreateCredentialModal: FC<CreateCredentialFormProps> = ({
   const [note, setNote] = useState("");
 
   function updateState(user: any) {
-    const newId = users.length > 0 ? users[users.length - 1].id + 1 : 1;
+    const newId = users.length > 0 ? users[users.length - 1].id + 1 : 0;
     user.id = newId;
     user.password = password;
     // Reset Form
