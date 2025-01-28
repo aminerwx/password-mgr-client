@@ -5,7 +5,7 @@ import Button from "./ui/Button";
 import Modal from "./ui/Modal";
 import { Copy, X, Eye, EyeOff, RefreshCcw } from "lucide-react";
 import { FC } from "react";
-import { useCredentialContext } from "../context/credential";
+import { useCredentialContext, Credential } from "../context/credential";
 import PasswordModal from "./PasswordModal";
 
 interface CreateCredentialFormProps
@@ -21,12 +21,19 @@ const CreateCredentialModal: FC<CreateCredentialFormProps> = ({
   closeModal,
   ...props
 }) => {
-  const { users, setUsers } = useCredentialContext();
-  const [userState, setUserState] = useState({
+  const { credentials, setCredentials } = useCredentialContext();
+
+  const resetCredentialForm: Credential = {
     id: 0,
+    title: "",
+    folder: "No Folder",
     username: "",
     password: "",
-  });
+    url: "",
+    note: "",
+  };
+  const [userState, setUserState] = useState<Credential>(resetCredentialForm);
+
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [itemName, setItemName] = useState("");
@@ -34,15 +41,17 @@ const CreateCredentialModal: FC<CreateCredentialFormProps> = ({
   const [note, setNote] = useState("");
 
   function updateState(user: any) {
-    const newId = users.length > 0 ? users[users.length - 1].id + 1 : 0;
+    const newId =
+      credentials.length > 0 ? credentials[credentials.length - 1].id + 1 : 0;
     user.id = newId;
     user.password = password;
+
     // Reset Form
-    setUserState({ id: 0, username: "", password: "" });
+    setUserState(resetCredentialForm);
     setPassword("");
 
     closeModal(id);
-    setUsers([...users, user]);
+    setCredentials([...credentials, user]);
   }
 
   return (
@@ -74,7 +83,7 @@ const CreateCredentialModal: FC<CreateCredentialFormProps> = ({
           />
           <div className=" border-slate-900 focus:border-blue-600 hover:border-blue-600 border-solid border shadow-lg rounded-md mb-2 p-1">
             <select className="w-full mx-1 outline-none font-mono break-all">
-              <option>No folder</option>
+              <option>{userState.folder}</option>
             </select>
           </div>
         </div>

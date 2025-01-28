@@ -1,4 +1,4 @@
-import { CredentialContext, User } from "../context/credential";
+import { CredentialContext, Credential } from "../context/credential";
 import CreateCredentialModal from "./CreateCredentialForm";
 import Button from "./ui/Button";
 import { Plus } from "lucide-react";
@@ -15,11 +15,13 @@ function closeModal(id: string) {
   modal && modal.close();
 }
 
-function Credential() {
-  const [users, setUsers] = useState<User[]>([]);
+function CredentialRender() {
+  const [users, setUsers] = useState<Credential[]>([]);
 
   return (
-    <CredentialContext.Provider value={{ users, setUsers }}>
+    <CredentialContext.Provider
+      value={{ credentials: users, setCredentials: setUsers }}
+    >
       <Button
         className="flex flex-row text-white font-medium rounded-md m-4 px-4 py-2 bg-slate-900 hover:bg-slate-950"
         onClick={() => openModal("credentialModal")}
@@ -37,4 +39,4 @@ function Credential() {
   );
 }
 
-export default Credential;
+export default CredentialRender;

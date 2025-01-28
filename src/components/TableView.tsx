@@ -6,7 +6,8 @@ import Input from "./ui/Input";
 import { useCredentialContext } from "../context/credential";
 
 const DataTable: FC = () => {
-  const { users, setUsers } = useCredentialContext();
+  const { credentials: users, setCredentials: setUsers } =
+    useCredentialContext();
 
   function deleteHandler(id: number) {
     setUsers(users.filter((user) => user.id !== id));
