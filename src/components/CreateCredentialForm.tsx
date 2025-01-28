@@ -32,26 +32,33 @@ const CreateCredentialModal: FC<CreateCredentialFormProps> = ({
     url: "",
     note: "",
   };
-  const [userState, setUserState] = useState<Credential>(resetCredentialForm);
+
+  const [credentialState, setCredentialState] =
+    useState<Credential>(resetCredentialForm);
 
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [itemName, setItemName] = useState("");
+  const [title, setTitle] = useState("");
   const [url, setURL] = useState("");
   const [note, setNote] = useState("");
+  const [folder, setFolder] = useState("");
 
-  function updateState(user: any) {
+  function saveCredentialHandler(credential: Credential) {
     const newId =
       credentials.length > 0 ? credentials[credentials.length - 1].id + 1 : 0;
-    user.id = newId;
-    user.password = password;
+    credential.id = newId;
+    credential.password = password;
+    credential.title = title;
+    credential.url = url;
+    credential.note = note;
+    credential.folder = folder;
 
     // Reset Form
-    setUserState(resetCredentialForm);
+    setCredentialState(resetCredentialForm);
     setPassword("");
 
     closeModal(id);
-    setCredentials([...credentials, user]);
+    setCredentials([...credentials, credential]);
   }
 
   return (
@@ -76,14 +83,14 @@ const CreateCredentialModal: FC<CreateCredentialFormProps> = ({
         <div className="flex flex-col m-3 p-3 bg-white border-black border-solid border rounded-md shadow-lg">
           <Input
             type="text"
-            value={itemName}
+            value={title}
             placeholder="Item name (required)"
             className="outline-none border-slate-900 focus:border-blue-600 hover:border-blue-600 border-solid border shadow-lg rounded-md mb-3 p-1 "
-            onChange={(e) => setItemName(e.target.value)}
+            onChange={(e) => setTitle(e.target.value)}
           />
           <div className=" border-slate-900 focus:border-blue-600 hover:border-blue-600 border-solid border shadow-lg rounded-md mb-2 p-1">
             <select className="w-full mx-1 outline-none font-mono break-all">
-              <option>{userState.folder}</option>
+              <option>{credentialState.folder}</option>
             </select>
           </div>
         </div>
@@ -92,11 +99,14 @@ const CreateCredentialModal: FC<CreateCredentialFormProps> = ({
           <Label className="mb-1" value="Username" />
           <Input
             type="text"
-            value={userState.username}
+            value={credentialState.username}
             placeholder="e.g aminerwx"
             className="outline-none border-slate-900 focus:border-blue-600 hover:border-blue-600 border-solid border rounded-md p-1"
             onChange={(e) =>
-              setUserState({ ...userState, username: e.target.value })
+              setCredentialState({
+                ...credentialState,
+                username: e.target.value,
+              })
             }
           />
           <Label className="mt-4 mb-1" value="Password" />
@@ -159,7 +169,7 @@ const CreateCredentialModal: FC<CreateCredentialFormProps> = ({
             <Button
               className="text-white font-medium rounded-md px-4 py-2 mr-5 bg-slate-900 hover:bg-slate-950"
               onClick={() => {
-                updateState(userState);
+                saveCredentialHandler(credentialState);
               }}
             >
               Save
